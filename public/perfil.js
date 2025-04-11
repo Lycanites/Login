@@ -1,6 +1,6 @@
 window.addEventListener("DOMContentLoaded", async () => {
   try {
-    const res = await fetch("http://localhost:3001/api/perfil", {
+    const res = await fetch("https://login-kj9u.onrender.com/api/perfil", {
       credentials: "include",
     });
 
@@ -26,7 +26,7 @@ document
   .getElementById("cerrarSesionBtn")
   .addEventListener("click", async () => {
     try {
-      const res = await fetch("http://localhost:3001/api/logout", {
+      const res = await fetch("https://login-kj9u.onrender.com/api/logout", {
         method: "POST",
         credentials: "include",
       });

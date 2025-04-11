@@ -7,7 +7,7 @@ document
     formData.forEach((val, key) => (data[key] = val));
 
     try {
-      const res = await fetch("https://login-kj9u.onrender.com", {
+      const res = await fetch("https://login-kj9u.onrender.com/api/registro", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
