@@ -7,6 +7,7 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 
 const app = express();
+app.use(express.static("public"));
 const PORT = process.env.PORT || 10000;
 
 app.use(cors({ origin: "http://localhost:5500", credentials: true }));
