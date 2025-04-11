@@ -1,5 +1,5 @@
 document
-  .getElementById("loginForm")
+  .getElementById("registroForm")
   .addEventListener("submit", async function (e) {
     e.preventDefault();
     const formData = new FormData(e.target);
@@ -16,11 +16,13 @@ document
 
       const result = await res.json();
       if (res.ok) {
-        alert("Bienvenido, " + result.usuario.nombre + "!");
+        alert("Registro exitoso. ¡Bienvenido, " + result.usuario.nombre + "!");
+        window.location.href = "Login.html"; // Redirección al login
       } else {
-        alert("Error: " + result.error);
+        alert("Error: " + (result.error || "No se pudo registrar"));
       }
     } catch (error) {
       console.error("Error al conectar:", error);
+      alert("Ocurrió un error al registrar. Intenta más tarde.");
     }
   });

@@ -144,3 +144,14 @@ app.get("/api/sesion", (req, res) => {
 app.listen(PORT, () => {
   console.log(`🚀 API de Registro y Login está corriendo!`);
 });
+
+// Ruta para cerrar sesión
+app.post("/api/logout", (req, res) => {
+  req.session.destroy((err) => {
+    if (err) {
+      return res.status(500).json({ error: "No se pudo cerrar la sesión" });
+    }
+    res.clearCookie("connect.sid"); // Elimina la cookie de sesión
+    res.json({ mensaje: "Sesión cerrada correctamente" });
+  });
+});

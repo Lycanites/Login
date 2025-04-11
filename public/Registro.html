@@ -24,8 +24,25 @@
           placeholder="Apellido Materno"
           required
         />
-        <input type="number" name="edad" placeholder="Edad" required />
-        <input type="text" name="sexo" placeholder="Sexo" required />
+
+        <input
+          type="number"
+          id="edad"
+          name="edad"
+          min="13"
+          max="120"
+          placeholder="Edad"
+          required
+        />
+
+        <select id="sexo" name="sexo" required>
+          <option value="">Selecciona tu género</option>
+          <option value="Masculino">Masculino</option>
+          <option value="Femenino">Femenino</option>
+          <option value="Otro">Otro</option>
+          <option value="Prefiero no decirlo">Prefiero no decirlo</option>
+        </select>
+
         <input type="text" name="origen" placeholder="Origen" required />
         <input
           type="text"
