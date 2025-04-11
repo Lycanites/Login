@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bienvenido a Registro Pastel</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        margin: 0;
+        font-family: "Quicksand", sans-serif;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        background: linear-gradient(-45deg, #fbc2eb, #a6c1ee, #fbc2eb, #a6c1ee);
+        background-size: 400% 400%;
+        animation: gradientBG 15s ease infinite;
+      }
+
+      @keyframes gradientBG {
+        0% {
+          background-position: 0% 50%;
+        }
+        50% {
+          background-position: 100% 50%;
+        }
+        100% {
+          background-position: 0% 50%;
+        }
+      }
+
+      h1 {
+        font-size: 2.5rem;
+        color: #444;
+        margin-bottom: 2rem;
+        text-align: center;
+      }
+
+      .btn-container {
+        display: flex;
+        gap: 20px;
+      }
+
+      .btn {
+        padding: 15px 30px;
+        background-color: #ffd6e0;
+        color: #444;
+        border: none;
+        border-radius: 12px;
+        font-weight: 600;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: background 0.3s ease;
+        text-decoration: none;
+      }
+
+      .btn:hover {
+        background-color: #ffc3d6;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Bienvenido a Registro Pastel 🎂</h1>
+
+    <div class="btn-container">
+      <a href="registro.html" class="btn">Registro</a>
+      <a href="login.html" class="btn">Iniciar Sesión</a>
+    </div>
+  </body>
+</html>
