@@ -11,34 +11,38 @@
     <div class="form-container">
       <h2>Registro de Usuario</h2>
       <form id="registroForm">
-        <input type="text" placeholder="Nombre" name="nombre" required />
+        <input type="text" name="nombre" placeholder="Nombre" required />
         <input
           type="text"
-          placeholder="Apellido Paterno"
           name="apellidoP"
+          placeholder="Apellido Paterno"
           required
         />
         <input
           type="text"
-          placeholder="Apellido Materno"
           name="apellidoM"
+          placeholder="Apellido Materno"
           required
         />
-        <input type="number" placeholder="Edad" name="edad" min="0" required />
-        <select name="sexo" required>
-          <option value="">Sexo</option>
-          <option value="Femenino">Femenino</option>
-          <option value="Masculino">Masculino</option>
-          <option value="Otro">Otro</option>
-        </select>
+        <input type="number" name="edad" placeholder="Edad" required />
+        <input type="text" name="sexo" placeholder="Sexo" required />
+        <input type="text" name="origen" placeholder="Origen" required />
         <input
           type="text"
-          placeholder="¿De dónde vienes?"
-          name="origen"
+          name="usuario"
+          placeholder="Nombre de usuario"
           required
         />
-        <button type="submit">Registrar</button>
+        <input
+          type="password"
+          name="password"
+          placeholder="Contraseña"
+          minlength="8"
+          required
+        />
+        <button type="submit">Registrarse</button>
       </form>
+
       <div class="navigation">
         <p>¿Ya tienes cuenta?</p>
         <button onclick="location.href='Login.html'">Iniciar Sesión</button>
