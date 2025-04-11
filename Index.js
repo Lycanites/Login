@@ -21,8 +21,9 @@ app.use(
   })
 );
 
+// ✅ Conexión con PostgreSQL (Neon)
 const pool = new Pool({
-  connectionString: process.env.DATABASE_URL, // Neon da esta URL directamente
+  connectionString: process.env.DATABASE_URL,
   ssl: { rejectUnauthorized: false },
 });
 
@@ -71,22 +72,12 @@ app.post("/api/registro", async (req, res) => {
 
   try {
     const hash = await bcrypt.hash(password, 10);
-    const conn = await pool.getConnection();
-    const query = `
-      INSERT INTO usuarios (nombre, apellidoP, apellidoM, edad, sexo, origen, usuario, password)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-    `;
-    await conn.execute(query, [
-      nombre,
-      apellidoP,
-      apellidoM,
-      edad,
-      sexo,
-      origen,
-      usuario,
-      hash,
-    ]);
-    conn.release();
+    // ✅ Nueva sintaxis para PostgreSQL
+    await pool.query(
+      `INSERT INTO usuarios (nombre, apellidoP, apellidoM, edad, sexo, origen, usuario, password)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`,
+      [nombre, apellidoP, apellidoM, edad, sexo, origen, usuario, hash]
+    );
     req.session.user = { usuario };
     res.json({ mensaje: "Registro exitoso", usuario });
   } catch (err) {
@@ -104,15 +95,14 @@ app.post("/api/login", async (req, res) => {
   }
 
   try {
-    const conn = await pool.getConnection();
-    const [rows] = await conn.execute(
-      `SELECT * FROM usuarios WHERE usuario = ?`,
+    // ✅ PostgreSQL usa query() en lugar de execute()
+    const result = await pool.query(
+      `SELECT * FROM usuarios WHERE usuario = $1`,
       [usuario]
     );
-    conn.release();
 
-    if (rows.length > 0) {
-      const usuarioData = rows[0];
+    if (result.rows.length > 0) {
+      const usuarioData = result.rows[0];
       const esValido = await bcrypt.compare(password, usuarioData.password);
 
       if (esValido) {
@@ -149,7 +139,7 @@ app.post("/api/logout", (req, res) => {
     if (err) {
       return res.status(500).json({ error: "No se pudo cerrar la sesión" });
     }
-    res.clearCookie("connect.sid"); // Elimina la cookie de sesión
+    res.clearCookie("connect.sid");
     res.json({ mensaje: "Sesión cerrada correctamente" });
   });
 });
