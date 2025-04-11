@@ -112,3 +112,7 @@ app.get("/api/sesion", (req, res) => {
 app.listen(PORT, () => {
   console.log(`Servidor corriendo en http://localhost:${PORT}`);
 });
+
+app.get("/", (req, res) => {
+  res.send("🚀 API de Registro y Login está corriendo!");
+});
