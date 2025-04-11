@@ -129,8 +129,27 @@ app.get("/api/sesion", (req, res) => {
   }
 });
 
-app.listen(PORT, () => {
-  console.log(`🚀 API de Registro y Login está corriendo!`);
+// Ruta para obtener el perfil del usuario logueado
+app.get("/api/perfil", async (req, res) => {
+  if (!req.session.user) {
+    return res.status(401).json({ error: "No autenticado" });
+  }
+
+  try {
+    const result = await pool.query(
+      `SELECT nombre, apellidoP, usuario FROM usuarios WHERE usuario = $1`,
+      [req.session.user.usuario]
+    );
+
+    if (result.rows.length > 0) {
+      res.json({ perfil: result.rows[0] });
+    } else {
+      res.status(404).json({ error: "Perfil no encontrado" });
+    }
+  } catch (err) {
+    console.error("Error al obtener perfil:", err);
+    res.status(500).json({ error: "Error en el servidor" });
+  }
 });
 
 // Ruta para cerrar sesión
@@ -142,4 +161,8 @@ app.post("/api/logout", (req, res) => {
     res.clearCookie("connect.sid");
     res.json({ mensaje: "Sesión cerrada correctamente" });
   });
+});
+
+app.listen(PORT, () => {
+  console.log(`🚀 API de Registro y Login está corriendo!`);
 });
