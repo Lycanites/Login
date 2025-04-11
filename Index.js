@@ -9,16 +9,19 @@ const app = express();
 const PORT = process.env.PORT || 3001;
 
 // Middleware
-app.use(cors({ origin: "http://localhost:5500", credentials: true })); // Cambia el puerto si usas otro
+app.use(cors({ origin: "http://localhost:5500", credentials: true }));
 app.use(bodyParser.json());
 app.use(
   session({
     secret: "clave_secreta_segura",
     resave: false,
     saveUninitialized: true,
-    cookie: { secure: false }, // true solo con HTTPS
+    cookie: { secure: false },
   })
 );
+
+// 👉 Agrega esta línea para servir tu página HTML y assets
+app.use(express.static("public"));
 
 // Conexión a la base de datos
 const pool = mysql.createPool({
@@ -48,7 +51,6 @@ function validarEntrada(data) {
 app.post("/api/registro", async (req, res) => {
   const { nombre, apellidoP, apellidoM, edad, sexo, origen } = req.body;
 
-  // Validación de entrada
   if (
     !validarEntrada(req.body) ||
     !nombre ||
@@ -77,7 +79,6 @@ app.post("/api/registro", async (req, res) => {
     ]);
     conn.release();
 
-    // Guardar sesión
     req.session.user = { nombre, apellidoP };
     res.json({ mensaje: "Registro exitoso", usuario: req.session.user });
   } catch (err) {
