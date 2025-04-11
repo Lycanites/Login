@@ -118,3 +118,5 @@ app.listen(PORT, () => {
 app.get("/", (req, res) => {
   res.send("🚀 API de Registro y Login está corriendo!");
 });
+
+//Cambio de nombre a index.js
