@@ -10,7 +10,7 @@ const app = express();
 app.use(express.static("public"));
 const PORT = process.env.PORT || 10000;
 
-app.use(cors({ origin: "http://localhost:5500", credentials: true }));
+app.use(cors({ origin: "https://login-kj9u.onrender.com", credentials: true }));
 app.use(bodyParser.json());
 app.use(
   session({
