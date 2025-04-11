@@ -95,7 +95,6 @@ app.post("/api/login", async (req, res) => {
   }
 
   try {
-    // ✅ PostgreSQL usa query() en lugar de execute()
     const result = await pool.query(
       `SELECT * FROM usuarios WHERE usuario = $1`,
       [usuario]
@@ -106,8 +105,15 @@ app.post("/api/login", async (req, res) => {
       const esValido = await bcrypt.compare(password, usuarioData.password);
 
       if (esValido) {
-        req.session.user = { usuario };
-        res.json({ mensaje: "Login exitoso", usuario });
+        req.session.user = { usuario: usuarioData.usuario };
+        res.json({
+          mensaje: "Login exitoso",
+          usuario: {
+            nombre: usuarioData.nombre,
+            apellidoP: usuarioData.apellidoP,
+            usuario: usuarioData.usuario,
+          },
+        });
       } else {
         res.status(401).json({ error: "Contraseña incorrecta" });
       }
