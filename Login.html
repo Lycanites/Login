@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login</title>
+    <link rel="stylesheet" href="Styles.css" />
+  </head>
+  <body>
+    <div class="animated-background"></div>
+    <div class="form-container">
+      <h2>Iniciar Sesión</h2>
+      <form id="loginForm">
+        <input type="text" name="nombre" placeholder="Nombre" required />
+        <input
+          type="text"
+          name="apellidoP"
+          placeholder="Apellido Paterno"
+          required
+        />
+        <button type="submit">Entrar</button>
+      </form>
+      <div class="navigation">
+        <p>¿No tienes cuenta?</p>
+        <button onclick="location.href='Index.html'">Registrarse</button>
+      </div>
+    </div>
+    <script src="login.js"></script>
+  </body>
+</html>
