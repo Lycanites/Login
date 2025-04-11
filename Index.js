@@ -1,10 +1,10 @@
 require("dotenv").config();
 const express = require("express");
 const session = require("express-session");
-const mysql = require("mysql2/promise");
 const bcrypt = require("bcrypt");
 const bodyParser = require("body-parser");
 const cors = require("cors");
+const { Pool } = require("pg");
 
 const app = express();
 app.use(express.static("public"));
@@ -21,11 +21,9 @@ app.use(
   })
 );
 
-const pool = mysql.createPool({
-  host: process.env.DB_HOST,
-  user: process.env.DB_USER,
-  password: process.env.DB_PASS,
-  database: process.env.DB_NAME,
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL, // Neon da esta URL directamente
+  ssl: { rejectUnauthorized: false },
 });
 
 // Validación por lista blanca
