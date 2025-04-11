@@ -1,7 +1,7 @@
 require("dotenv").config();
 const express = require("express");
 const session = require("express-session");
-const mysql = require("mysql2/promise");
+const { Pool } = require("pg");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 
@@ -16,22 +16,18 @@ app.use(
     secret: "clave_secreta_segura",
     resave: false,
     saveUninitialized: true,
-    cookie: { secure: false },
+    cookie: { secure: false }, // true solo si usas HTTPS
   })
 );
 
-// 👉 Agrega esta línea para servir tu página HTML y assets
-app.use(express.static("public"));
-
-// Conexión a la base de datos
-const pool = mysql.createPool({
-  host: "localhost",
-  user: "root",
-  password: "",
-  database: "registro_pastel",
-  waitForConnections: true,
-  connectionLimit: 10,
-  queueLimit: 0,
+// Conexión a PostgreSQL
+const pool = new Pool({
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME,
+  port: process.env.DB_PORT || 5432,
+  ssl: { rejectUnauthorized: false },
 });
 
 // Validación por lista blanca
@@ -47,7 +43,7 @@ function validarEntrada(data) {
   return Object.keys(data).every((campo) => camposValidos.includes(campo));
 }
 
-// Ruta de registro
+// Registro
 app.post("/api/registro", async (req, res) => {
   const { nombre, apellidoP, apellidoM, edad, sexo, origen } = req.body;
 
@@ -64,20 +60,11 @@ app.post("/api/registro", async (req, res) => {
   }
 
   try {
-    const conn = await pool.getConnection();
     const query = `
       INSERT INTO usuarios (nombre, apellidoP, apellidoM, edad, sexo, origen)
-      VALUES (?, ?, ?, ?, ?, ?)
+      VALUES ($1, $2, $3, $4, $5, $6)
     `;
-    await conn.execute(query, [
-      nombre,
-      apellidoP,
-      apellidoM,
-      edad,
-      sexo,
-      origen,
-    ]);
-    conn.release();
+    await pool.query(query, [nombre, apellidoP, apellidoM, edad, sexo, origen]);
 
     req.session.user = { nombre, apellidoP };
     res.json({ mensaje: "Registro exitoso", usuario: req.session.user });
@@ -87,7 +74,7 @@ app.post("/api/registro", async (req, res) => {
   }
 });
 
-// Ruta de login
+// Login
 app.post("/api/login", async (req, res) => {
   const { nombre, apellidoP } = req.body;
 
@@ -96,14 +83,12 @@ app.post("/api/login", async (req, res) => {
   }
 
   try {
-    const conn = await pool.getConnection();
-    const [rows] = await conn.execute(
-      `SELECT * FROM usuarios WHERE nombre = ? AND apellidoP = ?`,
-      [nombre, apellidoP]
-    );
-    conn.release();
+    const query = `
+      SELECT * FROM usuarios WHERE nombre = $1 AND apellidoP = $2
+    `;
+    const result = await pool.query(query, [nombre, apellidoP]);
 
-    if (rows.length > 0) {
+    if (result.rows.length > 0) {
       req.session.user = { nombre, apellidoP };
       res.json({ mensaje: "Login exitoso", usuario: req.session.user });
     } else {
@@ -115,7 +100,7 @@ app.post("/api/login", async (req, res) => {
   }
 });
 
-// Ruta de sesión
+// Ver sesión
 app.get("/api/sesion", (req, res) => {
   if (req.session.user) {
     res.json({ usuario: req.session.user });
