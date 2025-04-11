@@ -77,14 +77,22 @@
     <div class="login-container">
       <h2>Iniciar Sesión</h2>
       <form id="loginForm">
-        <input type="text" name="usuario" placeholder="Usuario" required />
+        <input
+          type="text"
+          id="usuario"
+          name="usuario"
+          placeholder="Usuario"
+          required
+        />
         <input
           type="password"
+          id="password"
           name="password"
           placeholder="Contraseña"
           minlength="8"
           required
         />
+
         <button type="submit">Iniciar sesión</button>
       </form>
 

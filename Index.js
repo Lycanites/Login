@@ -158,6 +158,41 @@ app.get("/api/perfil", async (req, res) => {
   }
 });
 
+document.getElementById("loginForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  const usuario = document.getElementById("usuario").value;
+  const password = document.getElementById("password").value;
+  const mensaje = document.getElementById("mensaje");
+
+  try {
+    const res = await fetch("https://login-kj9u.onrender.com/api/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify({ usuario, password }),
+    });
+
+    const data = await res.json();
+
+    if (res.ok) {
+      mensaje.textContent = `Bienvenido, ${data.usuario.nombre}!`;
+      mensaje.style.color = "green";
+
+      // Redirigir al perfil después de 1 segundo
+      setTimeout(() => {
+        window.location.href = "perfil.html";
+      }, 1000);
+    } else {
+      mensaje.textContent = data.error || "Error al iniciar sesión";
+      mensaje.style.color = "red";
+    }
+  } catch (err) {
+    mensaje.textContent = "Error de conexión";
+    mensaje.style.color = "red";
+  }
+});
+
 // Ruta para cerrar sesión
 app.post("/api/logout", (req, res) => {
   req.session.destroy((err) => {
