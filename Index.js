@@ -10,7 +10,12 @@ const app = express();
 app.use(express.static("public"));
 const PORT = process.env.PORT || 10000;
 
-app.use(cors({ origin: "https://login-kj9u.onrender.com", credentials: true }));
+app.use(
+  cors({
+    origin: "https://ciberseguridad-s1yn.onrender.com/api/perfil",
+    credentials: true,
+  })
+);
 app.use(bodyParser.json());
 app.use(
   session({

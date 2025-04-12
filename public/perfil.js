@@ -1,8 +1,11 @@
 window.addEventListener("DOMContentLoaded", async () => {
   try {
-    const res = await fetch("https://login-kj9u.onrender.com/api/perfil", {
-      credentials: "include",
-    });
+    const res = await fetch(
+      "https://ciberseguridad-s1yn.onrender.com/api/perfil",
+      {
+        credentials: "include",
+      }
+    );
 
     const result = await res.json();
 
