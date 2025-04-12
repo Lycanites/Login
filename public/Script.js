@@ -8,7 +8,7 @@ document
 
     try {
       const res = await fetch(
-        "https://ciberseguridad-s1yn.onrender.com/api/perfil",
+        "https://ciberseguridad-s1yn.onrender.com/api/registro",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
