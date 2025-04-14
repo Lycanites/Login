@@ -12,17 +12,22 @@ const PORT = process.env.PORT || 10000;
 
 app.use(
   cors({
-    origin: "https://ciberseguridad-s1yn.onrender.com/api/perfil",
+    origin: "https://ciberseguridad-s1yn.onrender.com", // ✅ SOLO el dominio
     credentials: true,
   })
 );
+
 app.use(bodyParser.json());
+
 app.use(
   session({
     secret: "clave_secreta_segura",
     resave: false,
     saveUninitialized: true,
-    cookie: { secure: false },
+    cookie: {
+      secure: true, // ✅ HTTPS
+      sameSite: "none", // ✅ para permitir cookies entre dominios
+    },
   })
 );
 
@@ -77,7 +82,6 @@ app.post("/api/registro", async (req, res) => {
 
   try {
     const hash = await bcrypt.hash(password, 10);
-    // ✅ Nueva sintaxis para PostgreSQL
     await pool.query(
       `INSERT INTO usuarios (nombre, apellidoP, apellidoM, edad, sexo, origen, usuario, password)
        VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`,
@@ -140,7 +144,7 @@ app.get("/api/sesion", (req, res) => {
   }
 });
 
-// Ruta para obtener el perfil del usuario logueado
+// Perfil del usuario logueado
 app.get("/api/perfil", async (req, res) => {
   if (!req.session.user) {
     return res.status(401).json({ error: "No autenticado" });
@@ -163,7 +167,7 @@ app.get("/api/perfil", async (req, res) => {
   }
 });
 
-// Ruta para cerrar sesión
+// Logout
 app.post("/api/logout", (req, res) => {
   req.session.destroy((err) => {
     if (err) {
@@ -175,5 +179,5 @@ app.post("/api/logout", (req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`🚀 API de Registro y Login está corriendo!`);
+  console.log(`🚀 API de Registro y Login corriendo en puerto ${PORT}`);
 });
