@@ -7,15 +7,12 @@ document
     formData.forEach((val, key) => (data[key] = val));
 
     try {
-      const res = await fetch(
-        "https://ciberseguridad-s1yn.onrender.com/api/registro",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          credentials: "include",
-          body: JSON.stringify(data),
-        }
-      );
+      const res = await fetch("https://login-kj9u.onrender.com", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify(data),
+      });
 
       const result = await res.json();
       if (res.ok) {

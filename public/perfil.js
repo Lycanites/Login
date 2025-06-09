@@ -1,11 +1,8 @@
 window.addEventListener("DOMContentLoaded", async () => {
   try {
-    const res = await fetch(
-      "https://ciberseguridad-s1yn.onrender.com/api/perfil",
-      {
-        credentials: "include",
-      }
-    );
+    const res = await fetch("https://login-kj9u.onrender.com", {
+      credentials: "include",
+    });
 
     const result = await res.json();
 
@@ -39,13 +36,10 @@ document
     if (!confirmacion) return;
 
     try {
-      const res = await fetch(
-        "https://ciberseguridad-s1yn.onrender.com/api/perfil",
-        {
-          method: "POST",
-          credentials: "include",
-        }
-      );
+      const res = await fetch("https://login-kj9u.onrender.com", {
+        method: "POST",
+        credentials: "include",
+      });
 
       const result = await res.json();
       if (res.ok) {
