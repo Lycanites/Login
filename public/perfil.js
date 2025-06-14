@@ -1,6 +1,3 @@
-// perfil.js
-
-// Evento para cargar el perfil al cargar la página
 window.addEventListener("DOMContentLoaded", async () => {
   try {
     const res = await fetch(
@@ -34,6 +31,31 @@ window.addEventListener("DOMContentLoaded", async () => {
     window.location.href = "login.html";
   }
 });
+
+document
+  .getElementById("cerrarSesionBtn")
+  .addEventListener("click", async () => {
+    const confirmacion = confirm("¿Deseas cerrar sesión?");
+    if (!confirmacion) return;
+
+    try {
+      const res = await fetch("https://login-kj9u.onrender.com/api/logout", {
+        method: "POST",
+        credentials: "include",
+      });
+
+      const result = await res.json();
+      if (res.ok) {
+        alert(result.mensaje);
+        window.location.href = "login.html";
+      } else {
+        alert("Error al cerrar sesión: " + result.error);
+      }
+    } catch (error) {
+      console.error("Error al cerrar sesión:", error);
+      alert("Error de conexión al cerrar sesión.");
+    }
+  });
 
 // Evento para cerrar sesión correctamente
 document
