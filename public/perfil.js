@@ -1,8 +1,14 @@
+// perfil.js
+
+// Evento para cargar el perfil al cargar la página
 window.addEventListener("DOMContentLoaded", async () => {
   try {
-    const res = await fetch("https://login-kj9u.onrender.com", {
-      credentials: "include",
-    });
+    const res = await fetch(
+      "https://ciberseguridad-s1yn.onrender.com/api/perfil",
+      {
+        credentials: "include",
+      }
+    );
 
     const result = await res.json();
 
@@ -29,6 +35,7 @@ window.addEventListener("DOMContentLoaded", async () => {
   }
 });
 
+// Evento para cerrar sesión correctamente
 document
   .getElementById("cerrarSesionBtn")
   .addEventListener("click", async () => {
@@ -36,10 +43,13 @@ document
     if (!confirmacion) return;
 
     try {
-      const res = await fetch("https://login-kj9u.onrender.com", {
-        method: "POST",
-        credentials: "include",
-      });
+      const res = await fetch(
+        "https://ciberseguridad-s1yn.onrender.com/api/logout", // <--- corregido
+        {
+          method: "POST",
+          credentials: "include",
+        }
+      );
 
       const result = await res.json();
       if (res.ok) {
