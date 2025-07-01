@@ -18,6 +18,7 @@ document
       );
 
       const result = await res.json();
+
       if (res.ok) {
         alert("Registro exitoso. ¡Bienvenido, " + result.usuario.nombre + "!");
         window.location.href = "Login.html"; // Redirección al login

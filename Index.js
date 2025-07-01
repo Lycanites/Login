@@ -1,7 +1,7 @@
 require("dotenv").config();
 const express = require("express");
 const session = require("express-session");
-const bcrypt = require("bcrypt");
+// const bcrypt = require("bcrypt"); // Eliminamos bcrypt
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const { Pool } = require("pg");
@@ -12,17 +12,17 @@ const PORT = process.env.PORT || 10000;
 
 app.use(
   cors({
-    origin: "https://ciberseguridad-s1yn.onrender.com/api/perfil",
+    origin: "https://ciberseguridad-s1yn.onrender.com", // Origen de CORS más general
     credentials: true,
   })
 );
 app.use(bodyParser.json());
 app.use(
   session({
-    secret: "clave_secreta_segura",
+    secret: "clave_secreta_facil_de_adivinar", // Clave de sesión débil y hardcodeada
     resave: false,
     saveUninitialized: true,
-    cookie: { secure: false },
+    cookie: { secure: false, httpOnly: false }, // Cookie insegura (no seguro, no httpOnly)
   })
 );
 
@@ -32,7 +32,7 @@ const pool = new Pool({
   ssl: { rejectUnauthorized: false },
 });
 
-// Validación por lista blanca
+// Validación por lista blanca (se mantiene, pero se relaja para contraseña)
 function validarEntrada(data) {
   const camposValidos = [
     "nombre",
@@ -60,6 +60,7 @@ app.post("/api/registro", async (req, res) => {
     password,
   } = req.body;
 
+  // Validación básica relajada para demostración de vulnerabilidad
   if (
     !validarEntrada(req.body) ||
     !nombre ||
@@ -70,24 +71,40 @@ app.post("/api/registro", async (req, res) => {
     !origen ||
     !usuario ||
     !password ||
-    password.length < 8
+    password.length < 1 // Contraseña de cualquier longitud (mínimo 1 para no vacía)
   ) {
     return res.status(400).json({ error: "Campos inválidos o incompletos" });
   }
 
   try {
-    const hash = await bcrypt.hash(password, 10);
-    // ✅ Nueva sintaxis para PostgreSQL
+    // ❌ INSEGURIDAD CRÍTICA: Contraseña almacenada en texto plano
+    const plainPassword = password;
+
     await pool.query(
       `INSERT INTO usuarios (nombre, apellidoP, apellidoM, edad, sexo, origen, usuario, password)
        VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`,
-      [nombre, apellidoP, apellidoM, edad, sexo, origen, usuario, hash]
+      [
+        nombre,
+        apellidoP,
+        apellidoM,
+        edad,
+        sexo,
+        origen,
+        usuario,
+        plainPassword, // Aquí se inserta la contraseña sin hash
+      ]
     );
     req.session.user = { usuario };
     res.json({ mensaje: "Registro exitoso", usuario });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: "Error en el servidor" });
+    if (err.code === "23505") {
+      // Manejo de error para usuario duplicado (si la columna usuario es UNIQUE)
+      return res.status(409).json({ error: "El usuario ya existe." });
+    }
+    res
+      .status(500)
+      .json({ error: "Error en el servidor al intentar registrar." });
   }
 });
 
@@ -107,7 +124,8 @@ app.post("/api/login", async (req, res) => {
 
     if (result.rows.length > 0) {
       const usuarioData = result.rows[0];
-      const esValido = await bcrypt.compare(password, usuarioData.password);
+      // ❌ INSEGURIDAD CRÍTICA: Comparación de contraseña en texto plano
+      const esValido = password === usuarioData.password; // Comparación directa sin hash
 
       if (esValido) {
         req.session.user = { usuario: usuarioData.usuario };
@@ -175,5 +193,7 @@ app.post("/api/logout", (req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`🚀 API de Registro y Login está corriendo!`);
+  console.log(
+    `🚀 API de Registro y Login (INSEGURO PARA PRUEBAS) está corriendo en el puerto ${PORT}!`
+  );
 });
